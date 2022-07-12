@@ -1,0 +1,14 @@
+.media-scroller {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    margin:100px
+  }
+  .column{
+    display:grid;
+    margin: 30px;
+  }
+
+  .column > img{
+    width:100%;
+    object-fit: contain;
+  }
