@@ -10,7 +10,6 @@ import useUserSearch from "./useUserSearch";
 function App() {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(28);
-  const [more,setMore] = useState(true);
 
   const { users, hasMore, loading, error } = useUserSearch(
     page,
@@ -21,51 +20,46 @@ function App() {
 
   const lastUserRef = useCallback(
     (node) => {
-        console.log(node)
+      console.log(node);
       if (loading) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting && more) {
-            console.log('visible')
+          if (entries[0].isIntersecting && hasMore) {
+            console.log(hasMore);
             setPage((prevPage) => prevPage + 1);
-          }else{
-            setPage((prevPage) => prevPage)
           }
         }
       );
       if (node) observer.current.observe(node);
     },
-    [loading, more]
+    [loading, hasMore]
   );
 
   return (
     <>
-      <div className="media-scroller">
+      <div className='media-scroller'>
         {users.map((user) =>
           user.map((name, index) => {
-            if (name.id === 1000){
-                setMore(false)
-            }
             if (user.length === index + 1) {
               return (
-                <div className="column">
-                  <img
-                    src={name.imageUrl}
-                    alt=''
-                  ></img>
-                  <span ref={lastUserRef}>{name.prefix}.{name.name} {name.lastName}</span>
+                <div className='column'>
+                  <img src={name.imageUrl} alt=''></img>
+                  <span ref={lastUserRef}>
+                    {name.prefix}.{name.name}{" "}
+                    {name.lastName}
+                  </span>
                   <p>{name.title}</p>
                 </div>
               );
             } else {
               return (
-                <div className="column">
-                  <img
-                    src={name.imageUrl}
-                    alt=''
-                  ></img>
-                  <span>{name.prefix} {name.name} {name.lastName}</span>
+                <div className='column'>
+                  <img src={name.imageUrl} alt=''></img>
+                  <span>
+                    {name.prefix} {name.name}{" "}
+                    {name.lastName}
+                  </span>
                   <p>{name.title}</p>
                 </div>
               );
@@ -74,7 +68,17 @@ function App() {
         )}
       </div>
 
-      <div>{loading && "Loading..."}</div>
+      {loading && (
+        <div className='center'>
+          <div className='wave'></div>
+          <div className='wave'></div>
+          <div className='wave'></div>
+          <div className='wave'></div>
+          <div className='wave'></div>
+          <div className='wave'></div>
+        </div>
+      )}
+
       <div>{error && "Error"}</div>
     </>
   );

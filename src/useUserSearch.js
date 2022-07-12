@@ -27,7 +27,7 @@ export default function useUserSearch(page, size) {
             ]),
           ];
         });
-        setHasMore(res.data.length > 0);
+        setHasMore(res.data.list.length > 0);
         setLoading(false);
         console.log(users);
       })
