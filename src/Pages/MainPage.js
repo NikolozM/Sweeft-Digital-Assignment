@@ -3,7 +3,7 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import useUserSearch from "../useUserSearch";
+import { useUserSearch } from "../useUserSearch";
 import { Link } from "react-router-dom";
 
 export default function MainPage() {
@@ -43,6 +43,7 @@ export default function MainPage() {
             if (user.length === index + 1) {
               return (
                 <Link
+                  key={name.id}
                   className='link column'
                   to={`/UserPage/${name.id}`}
                 >
@@ -57,6 +58,7 @@ export default function MainPage() {
             } else {
               return (
                 <Link
+                  key={name.id}
                   className='link column'
                   to={`/UserPage/${name.id}`}
                 >
