@@ -2,7 +2,6 @@ import React, {
   useState,
   useRef,
   useCallback,
-  useEffect,
 } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
@@ -17,12 +16,30 @@ export default function UserPage() {
 
   const { user } = useUserInfo(userId);
 
+  const us = [user?.name];
+
+  const [friendLinks, setFriendLinks] = useState([us]);
+
+  console.log(user.name);
+
+  function addFriendLink(user) {
+    setFriendLinks((prev) => [
+      ...prev,
+      <Link to={`/UserPage/${user.id}`}>
+        <span onClick={() => {changeUserId(user.id) ; setFriends()}}>
+          {user.prefix} {user.name} {user.lastName} {" "}&gt;
+        </span>
+      </Link>,
+    ]);
+  }
+
   function changeUserId(id) {
     setUserId(id);
   }
 
-  const [page, setPage] = useState(1);
-  const [size, setSize] = useState(28);
+  const [pages, setPages] = useState(1);
+  // eslint-disable-next-line no-unused-vars
+  const [size, setSize] = useState(20);
 
   const {
     userFriends,
@@ -30,11 +47,10 @@ export default function UserPage() {
     hasMore,
     loading,
     error,
-  } = useUserFriendsSearch(userId, page, size);
+  } = useUserFriendsSearch(userId, pages, size);
 
   function setFriends() {
     setUserFriends([]);
-    console.log(userFriends.length);
   }
 
   const observer = useRef();
@@ -46,8 +62,7 @@ export default function UserPage() {
       observer.current = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting && hasMore) {
-            console.log(hasMore);
-            setPage((prevPage) => prevPage + 1);
+            setPages((prevPage) => prevPage + 1);
           }
         }
       );
@@ -57,10 +72,20 @@ export default function UserPage() {
   );
 
   return (
-    <div>
+    <div
+      style={{
+        maxWidth: "1200px",
+        border: "1px solid #ccc",
+        margin: "0 auto",
+      }}
+    >
       <div>
         <User user={user} />
       </div>
+
+      <div style={{marginLeft:"20px"}}>{friendLinks.map((user) => user)}</div>
+
+      <h2 style={{ marginLeft: "10px" }}>Friends:</h2>
 
       <div className='media-scroller'>
         {userFriends.map((user) =>
@@ -69,17 +94,26 @@ export default function UserPage() {
               return (
                 <div
                   key={name.id}
-                  onClick={() => changeUserId(name.id)}
+                  onClick={() => {
+                    changeUserId(name.id);
+                    addFriendLink(name);
+                    setFriends();
+                  }}
                 >
                   <Link
                     className='link column'
                     to={`/UserPage/${name.id}`}
                   >
-                    <img src={name.imageUrl} alt=''></img>
-                    <span ref={lastUserRef}>
-                      {name.prefix}.{name.name}{" "}
-                      {name.lastName}
-                    </span>
+                    <img
+                      src={name.imageUrl + `?q=${name.id}`}
+                      alt=''
+                    ></img>
+                    <strong>
+                      <span ref={lastUserRef}>
+                        {name.prefix}.{name.name}{" "}
+                        {name.lastName}
+                      </span>
+                    </strong>
                     <p>{name.title}</p>
                   </Link>
                 </div>
@@ -91,17 +125,23 @@ export default function UserPage() {
                   onClick={() => {
                     setFriends();
                     changeUserId(name.id);
+                    addFriendLink(name);
                   }}
                 >
                   <Link
                     className='link column'
                     to={`/UserPage/${name.id}`}
                   >
-                    <img src={name.imageUrl} alt=''></img>
-                    <span>
-                      {name.prefix} {name.name}{" "}
-                      {name.lastName}
-                    </span>
+                    <img
+                      src={name.imageUrl + `?q=${name.id}`}
+                      alt=''
+                    ></img>
+                    <strong>
+                      <span>
+                        {name.prefix} {name.name}{" "}
+                        {name.lastName}
+                      </span>
+                    </strong>
                     <p>{name.title}</p>
                   </Link>
                 </div>

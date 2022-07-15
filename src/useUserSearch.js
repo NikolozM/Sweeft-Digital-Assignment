@@ -29,14 +29,13 @@ export function useUserSearch(page, size) {
         });
         setHasMore(res.data.list.length > 0);
         setLoading(false);
-        console.log(users);
       })
       .catch((e) => {
         if (axios.isCancel(e)) return;
         setError(true);
       });
     return () => cancel();
-  }, [page]);
+  }, [page, size]);
   return { loading, error, users, hasMore };
 }
 
@@ -70,7 +69,7 @@ export function useUserInfo(id) {
 
 // userFriends data
 
-export function useUserFriendsSearch(id, page, size) {
+export function useUserFriendsSearch(id, pages, size) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [userFriends, setUserFriends] = useState([]);
@@ -85,7 +84,7 @@ export function useUserFriendsSearch(id, page, size) {
       cancelToken: new axios.CancelToken(
         (c) => (cancel = c)
       ),
-      url: `http://sweeftdigital-intern.eu-central-1.elasticbeanstalk.com/user/${id}/friends/${page}/${size}`,
+      url: `http://sweeftdigital-intern.eu-central-1.elasticbeanstalk.com/user/${id}/friends/${pages}/${size}`,
     })
       .then((res) => {
         setUserFriends((prevUserFriends) => {
@@ -98,15 +97,13 @@ export function useUserFriendsSearch(id, page, size) {
         });
         setHasMore(res.data.list.length > 0);
         setLoading(false);
-        console.log("daaaaaaadadadaa");
-        console.log(res.data.pagination.total);
       })
       .catch((e) => {
         if (axios.isCancel(e)) return;
         setError(true);
       });
     return () => cancel();
-  }, [id, page]);
+  }, [id, pages, size]);
   return {
     loading,
     error,

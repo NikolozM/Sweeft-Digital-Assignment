@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 export default function MainPage() {
   const [page, setPage] = useState(1);
-  const [size, setSize] = useState(28);
+  const [size] = useState(20);
 
   const { users, hasMore, loading, error } = useUserSearch(
     page,
@@ -19,13 +19,11 @@ export default function MainPage() {
 
   const lastUserRef = useCallback(
     (node) => {
-      console.log(node);
       if (loading) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting && hasMore) {
-            console.log(hasMore);
             setPage((prevPage) => prevPage + 1);
           }
         }
@@ -47,7 +45,10 @@ export default function MainPage() {
                   className='link column'
                   to={`/UserPage/${name.id}`}
                 >
-                  <img src={name.imageUrl} alt=''></img>
+                  <img
+                    src={name.imageUrl + `?q=${name.id}`}
+                    alt=''
+                  ></img>
                   <span ref={lastUserRef}>
                     {name.prefix}.{name.name}{" "}
                     {name.lastName}
@@ -62,11 +63,16 @@ export default function MainPage() {
                   className='link column'
                   to={`/UserPage/${name.id}`}
                 >
-                  <img src={name.imageUrl} alt=''></img>
-                  <span>
-                    {name.prefix} {name.name}{" "}
-                    {name.lastName}
-                  </span>
+                  <img
+                    src={name.imageUrl + `?q=${name.id}`}
+                    alt=''
+                  ></img>
+                  <strong>
+                    <span>
+                      {name.prefix} {name.name}{" "}
+                      {name.lastName}
+                    </span>
+                  </strong>
                   <p>{name.title}</p>
                 </Link>
               );
