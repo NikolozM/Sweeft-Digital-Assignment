@@ -20,14 +20,17 @@ export default function UserPage() {
 
   const [friendLinks, setFriendLinks] = useState([us]);
 
-  console.log(user.name);
-
   function addFriendLink(user) {
     setFriendLinks((prev) => [
       ...prev,
       <Link to={`/UserPage/${user.id}`}>
-        <span onClick={() => {changeUserId(user.id) ; setFriends()}}>
-          {user.prefix} {user.name} {user.lastName} {" "}&gt;
+        <span
+          onClick={() => {
+            changeUserId(user.id);
+            setFriends();
+          }}
+        >
+          {user.prefix} {user.name} {user.lastName} &gt;
         </span>
       </Link>,
     ]);
@@ -83,7 +86,9 @@ export default function UserPage() {
         <User user={user} />
       </div>
 
-      <div style={{marginLeft:"20px"}}>{friendLinks.map((user) => user)}</div>
+      <div style={{ marginLeft: "20px" }}>
+        {friendLinks.map((user) => user)}
+      </div>
 
       <h2 style={{ marginLeft: "10px" }}>Friends:</h2>
 

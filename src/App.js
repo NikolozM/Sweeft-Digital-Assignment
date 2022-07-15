@@ -1,11 +1,9 @@
-import React , { useState } from "react";
+import React from "react";
 import MainPage from "../src/Pages/MainPage";
 import UserPage from "../src/Pages/UserPage";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
-
-
   return (
     <div>
       <Routes>
@@ -13,7 +11,7 @@ function App() {
 
         <Route
           path='/UserPage/:id'
-          element={<UserPage  />}
+          element={<UserPage />}
         />
       </Routes>
     </div>
